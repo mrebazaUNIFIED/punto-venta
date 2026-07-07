@@ -12,7 +12,7 @@ class ArticuloController extends Controller
 {
     public function index()
     {
-        $articulos = Articulo::with('categoria')->paginate(8);
+        $articulos = Articulo::with('categoria', 'inventario')->paginate(8);
         $categorias = Categoria::all();
         return view('pages.almacen.artículos', compact('articulos', 'categorias'));
     }

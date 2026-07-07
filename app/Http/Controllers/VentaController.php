@@ -75,7 +75,9 @@ class VentaController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'detalles' => 'required|array',
+      'detalles' => 'required|array|min:1',
+      'detalles.*.articulo_id' => 'required|exists:articulos,id',
+      'detalles.*.cantidad' => 'required|integer|min:1',
       'tipo_pago' => 'required|in:efectivo,yape',
     ]);
 
@@ -84,6 +86,9 @@ class VentaController extends Controller
       ->where('estado', true)
       ->first();
 
+    if (!$cajaAbierta) {
+      return redirect()->route('caja.apertura')->with('error', 'No hay una caja abierta.');
+    }
 
     DB::beginTransaction();
     try {
@@ -100,7 +105,17 @@ class VentaController extends Controller
         $articulo = Articulo::with('inventario')->find($detalle['articulo_id']);
         if (!$articulo) continue;
 
-        $cantidad = $detalle['cantidad'];
+        $cantidad = (int) $detalle['cantidad'];
+        $stockDisponible = $articulo->inventario->stock ?? 0;
+
+        if ($cantidad > $stockDisponible) {
+          DB::rollBack();
+          return redirect()->back()->with(
+            'error',
+            "Stock insuficiente para \"{$articulo->nombre}\": disponible {$stockDisponible}, solicitado {$cantidad}."
+          );
+        }
+
         $precioUnitario = $articulo->p_venta;
         $subtotal = $cantidad * $precioUnitario;
 
@@ -113,8 +128,7 @@ class VentaController extends Controller
         ]);
 
         // Resta del stock
-        $articulo->inventario->stock -= $cantidad;
-        $articulo->inventario->save();
+        $articulo->inventario->decrement('stock', $cantidad);
 
         $total += $subtotal;
       }
@@ -129,7 +143,7 @@ class VentaController extends Controller
 
       DB::commit();
       return redirect()->route('ventas.posventa.index')->with('success', 'Venta registrada exitosamente.');
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       DB::rollBack();
       return redirect()->back()->with('error', 'Error al registrar la venta: ' . $e->getMessage());
     }

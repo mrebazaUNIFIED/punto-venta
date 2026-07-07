@@ -1,135 +1,252 @@
 <x-app-layout>
-    <div class="p-6">
-        <h1 class="text-2xl font-bold  mb-6">Inventario</h1>
+    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <div class="flex space-x-2">
-                <a href="{{ route('almacen.inventario.excel') }}" class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 text-sm flex items-center gap-1">
-                    <i class="fa-solid fa-file-excel"></i> Excel
-                </a>
-                <a href="{{ route('almacen.inventario.pdf') }}" class="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 text-sm flex items-center gap-1">
-                    <i class="fa-solid fa-file-pdf"></i> PDF
-                </a>
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+                <h2 class="text-4xl font-black text-slate-950 tracking-tighter">Control de Existencias</h2>
+                <p class="text-slate-400 font-medium mt-1">Monitorea y ajusta los niveles de stock de tu catálogo
+                    global.</p>
             </div>
 
-            <!-- Buscador con icono -->
-            <div class="flex items-center relative w-full md:w-1/3">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-600">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103 10.5a7.5 7.5 0 0013.15 6.15z" />
-                    </svg>
-                </span>
-                <input type="text" id="search" placeholder="Buscar por código o nombre" class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700">
+            <div class="flex items-center gap-3">
+                <a href="{{ route('almacen.inventario.excel') }}"
+                    class="group flex items-center gap-3 px-6 py-4 bg-white border border-slate-100 text-slate-600 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-sm hover:bg-green-50 hover:text-green-600 hover:border-green-100 transition-all">
+                    <i class="fas fa-file-excel text-lg text-green-500 group-hover:scale-110 transition-transform"></i>
+                    Exportar Excel
+                </a>
+                <a href="{{ route('almacen.inventario.pdf') }}"
+                    class="group flex items-center gap-3 px-6 py-4 bg-white border border-slate-100 text-slate-600 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-sm hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all">
+                    <i class="fas fa-file-pdf text-lg text-red-500 group-hover:scale-110 transition-transform"></i>
+                    Generar PDF
+                </a>
             </div>
         </div>
 
-        <div class="overflow-x-auto  rounded-lg shadow">
-            <table class="min-w-full bg-white divide-y divide-gray-200">
-                <thead class=" bg-gray-300 ">
-                    <tr class=" text-center ">
-                        <th class="px-4 py-3 tracking-wider">Imagen</th>
-                        <th class="px-4 py-3 tracking-wider ">Código</th>
-                        <th class="px-4 py-3 tracking-wider">Producto</th>
-                        <th class="px-4 py-3 tracking-wider">Precio Compra</th>
-                        <th class="px-4 py-3 tracking-wider">Precio Venta</th>
-                        <th class="px-4 py-3 tracking-wider">Stock</th>
-                        <th class="px-4 py-3 tracking-wider">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody" class="divide-y  divide-gray-200">
-                    @foreach($inventario as $item)
-                    <tr class="hover:bg-gray-200 transition duration-150 text-center">
-                        <td class="px-4 py-3 align-middle">
-                            <div class="flex items-center justify-center">
-                                @if($item->articulo->imagen)
-                                <img src="{{ asset('storage/articulos/' . $item->articulo->imagen) }}" alt="Producto" class="w-10 h-10 rounded-md">
-                                @else
-                                <span class="text-gray-500">No img</span>
-                                @endif
-                            </div>
-                        </td>
-                        <td class="px-4 py-3">{{ $item->articulo->codigo }}</td>
-                        <td class="px-4 py-3">{{ $item->articulo->nombre }}</td>
-                        <td class="px-4 py-3">S/ {{ number_format($item->articulo->p_compra, 2) }}</td>
-                        <td class="px-4 py-3">S/ {{ number_format($item->articulo->p_venta, 2) }}</td>
-                        <td class="px-4 py-3">
-                            <input type="number" id="stock-{{ $item->id }}" class="w-24 px-2 py-1 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none text-center" value="{{ $item->stock }}" data-id="{{ $item->id }}">
-                        </td>
-                        <td class="px-4 py-3">
-                            <button onclick="actualizarStock('{{ $item->id }}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm">
-                                Actualizar
-                            </button>
-                            <span id="estado-{{ $item->id }}" class="text-sm text-gray-600 ml-2"></span>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <!-- Search & Global Stats Strip -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            <div class="md:col-span-5 relative group">
+                <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                    <i class="fas fa-barcode text-slate-300 group-focus-within:text-blue-500 transition-colors"></i>
+                </div>
+                <input type="text" id="search" placeholder="Buscar por código o nombre de artículo..."
+                    class="w-full pl-14 pr-6 py-4 bg-white/70 backdrop-blur-xl border border-white rounded-[2rem] focus:ring-[8px] focus:ring-blue-500/5 text-slate-900 font-bold transition-all outline-none placeholder:text-slate-300 shadow-sm">
+            </div>
 
-            <div class="p-4">
-                {{ $inventario->links() }}
+            <div class="md:col-span-7 flex flex-wrap gap-4 justify-end">
+                <div class="px-6 py-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 flex items-center gap-4">
+                    <div class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></div>
+                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest italic">Sincronización
+                        en Tiempo Real Activa</span>
+                </div>
             </div>
         </div>
+
+        <!-- Inventory Table Card -->
+        <div
+            class="bg-white/70 backdrop-blur-xl border border-white rounded-[3rem] shadow-[0_40px_80px_rgba(0,0,0,0.05)] overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-50">
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic text-center">
+                                Visual</th>
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">
+                                Código / SKU</th>
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">
+                                Artículo de Inventario</th>
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic text-center">
+                                P. Compra</th>
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic text-center">
+                                P. Venta</th>
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic text-center w-40">
+                                Existencia</th>
+                            <th
+                                class="px-8 py-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic text-right">
+                                Ajuste</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-50 text-slate-600">
+                        @foreach($inventario as $item)
+                            <tr class="group hover:bg-slate-50/50 transition-colors">
+                                <td class="px-8 py-6">
+                                    <div class="flex justify-center">
+                                        @if($item->articulo->imagen)
+                                            <div
+                                                class="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white shadow-md ring-4 ring-slate-50 group-hover:ring-blue-50 transition-all">
+                                                <img src="{{ asset('storage/articulos/' . $item->articulo->imagen) }}"
+                                                    alt="Producto" class="w-full h-full object-cover">
+                                            </div>
+                                        @else
+                                            <div
+                                                class="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300">
+                                                <i class="fas fa-image text-xl"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <span
+                                        class="text-xs font-black text-slate-900 mono tracking-tighter">{{ $item->articulo->codigo }}</span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <div>
+                                        <p class="text-sm font-black text-slate-900 tracking-tight">
+                                            {{ $item->articulo->nombre }}</p>
+                                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">
+                                            {{ $item->articulo->categoria->nombre ?? 'Sin Categoría' }}</p>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <span class="text-xs font-bold text-slate-400 italic">S/
+                                        {{ number_format($item->articulo->p_compra, 2) }}</span>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <span class="text-xs font-black text-blue-600">S/
+                                        {{ number_format($item->articulo->p_venta, 2) }}</span>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <div class="relative inline-flex items-center group/stock">
+                                        <input type="number" id="stock-{{ $item->id }}"
+                                            class="w-24 px-4 py-3 bg-white border-2 border-slate-100 rounded-2xl text-slate-900 font-black text-center focus:ring-[10px] focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all shadow-inner"
+                                            value="{{ $item->stock }}" data-id="{{ $item->id }}">
+
+                                        @if($item->stock <= 5)
+                                            <div class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[8px] font-black shadow-lg shadow-red-200 animate-bounce cursor-help"
+                                                title="Stock Crítico">
+                                                <i class="fas fa-exclamation"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex items-center justify-end gap-3">
+                                        <button onclick="actualizarStock('{{ $item->id }}')"
+                                            class="h-11 px-6 bg-slate-900 hover:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all active:scale-95 shadow-xl shadow-slate-100 flex items-center gap-2">
+                                            <i class="fas fa-sync-alt text-[10px]"></i> Sincronizar
+                                        </button>
+                                        <span id="loader-{{ $item->id }}"
+                                            class="hidden text-blue-500 animate-spin text-sm">
+                                            <i class="fas fa-circle-notch"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            @if($inventario->hasPages())
+                <div class="px-8 py-6 border-t border-slate-50 bg-slate-50/30">
+                    {{ $inventario->links() }}
+                </div>
+            @endif
+        </div>
+
+        <div
+            class="bg-blue-600 p-8 rounded-[2.5rem] text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-blue-100 transition-transform hover:scale-[1.01] duration-500">
+            <div class="flex items-center gap-6">
+                <div
+                    class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div>
+                    <h4 class="text-lg font-black tracking-tight italic">Optimización de Almacén</h4>
+                    <p class="text-blue-100 font-bold text-xs mt-1">El sistema sugiere reabastecimiento automático
+                        cuando el stock es menor a 5 unidades.</p>
+                </div>
+            </div>
+            <div class="hidden md:block w-px h-12 bg-white/20"></div>
+            <p class="text-[9px] font-black uppercase tracking-[0.4em] opacity-60 italic">Gestión Logística certificada
+            </p>
+        </div>
+
     </div>
-
 
     <script>
         function actualizarStock(id) {
             const input = document.getElementById('stock-' + id);
+            const loader = document.getElementById('loader-' + id);
             const stock = input.value;
-            const estadoSpan = document.getElementById('estado-' + id);
+
+            // Visual feedback
+            loader.classList.remove('hidden');
+            input.disabled = true;
+            input.classList.add('opacity-50');
 
             fetch(`/almacen/inventario/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        _method: 'PUT',
-                        stock: stock
-                    })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    _method: 'PUT',
+                    stock: stock
                 })
-                .then(res => res.json())
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Error de servidor');
+                    return res.json();
+                })
                 .then(data => {
-                 
-
                     Swal.fire({
                         icon: 'success',
-                        title: 'Stock actualizado',
+                        title: 'Inventario Actualizado',
                         text: data.message,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2000,
+                        customClass: {
+                            popup: 'rounded-[3rem] p-10',
+                            title: 'font-black text-2xl tracking-tighter',
+                            content: 'font-bold text-slate-500 italic'
+                        }
                     });
 
+                    input.classList.remove('border-slate-100');
+                    input.classList.add('border-green-500');
                     setTimeout(() => {
-                        estadoSpan.innerText = '';
                         input.classList.remove('border-green-500');
-                        input.classList.add('border-gray-600');
-                    }, 2000);
+                        input.classList.add('border-slate-100');
+                    }, 3000);
                 })
                 .catch(error => {
-                    input.classList.add('border-red-500');
-
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error al actualizar',
-                        text: 'Intenta nuevamente más tarde.'
+                        title: 'Error Crítico',
+                        text: 'No se pudo sincronizar el stock. Intenta de nuevo.',
+                        customClass: { popup: 'rounded-[3rem]' }
                     });
-
-                    console.error('Error al actualizar:', error);
+                    input.classList.add('border-red-500');
+                })
+                .finally(() => {
+                    loader.classList.add('hidden');
+                    input.disabled = false;
+                    input.classList.remove('opacity-50');
                 });
         }
 
-        // Buscador local dinámico
+        // Search engine optimization
         document.getElementById('search').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
+            const term = e.target.value.toLowerCase();
             const rows = document.querySelectorAll('#tableBody tr');
             rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
+                const text = row.innerText.toLowerCase();
+                if (text.includes(term)) {
+                    row.classList.remove('hidden');
+                    row.classList.add('animate-in', 'fade-in', 'duration-300');
+                } else {
+                    row.classList.add('hidden');
+                }
             });
         });
     </script>

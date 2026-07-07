@@ -24,7 +24,7 @@ require __DIR__ . '/auth.php';
 //Rutas del proyecto
 
 //Panel de control
-Route::prefix('panel')->middleware('auth')->group(function () {
+Route::prefix('panel')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('panel.usuarios.index');
     Route::post('/usuarios', [UsuariosController::class, 'store'])->name('usuarios.store');
     Route::put('/usuarios/{user}', [UsuariosController::class, 'update'])->name('usuarios.update');
@@ -111,12 +111,12 @@ Route::prefix('ventas')->middleware('auth')->group(function () {
 
 
 //Reportes
-Route::prefix('reportes')->middleware('auth')->group(function () {
+Route::prefix('reportes')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/graficos', [EmpresaController::class, 'reportes'])->name('empresa.reportes');
 });
 
 //Configuracion
-Route::prefix('configuracion')->middleware('auth')->group(function () {
+Route::prefix('configuracion')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/empresa', [EmpresaController::class, 'index'])->name('configuracion.empresa.index');
     Route::put('/empresa/{empresa}', [EmpresaController::class, 'update'])->name('configuracion.empresa.update');
 });

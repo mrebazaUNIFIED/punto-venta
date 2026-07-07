@@ -18,7 +18,11 @@ class EmpresaController extends Controller
 {
     public function index()
     {
-        $empresa = Empresa::first(); // Suponemos que solo hay una empresa
+        $empresa = Empresa::first() ?? Empresa::create([
+            'razon_social' => 'SISTEMA POS PRO',
+            'ruc' => '12345678901',
+            'direccion_fiscal' => 'AV. TECNOLOGÍA 123',
+        ]);
         return view('pages.configuracion.datos', compact('empresa'));
     }
 

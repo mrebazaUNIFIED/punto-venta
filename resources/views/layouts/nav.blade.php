@@ -1,137 +1,125 @@
-<aside x-bind:class="{ 'w-64': open, 'w-16': !open }" class="bg-gray-900 text-white p-4 transition-all duration-300 ease-in-out h-screen overflow-y-auto">
-    <div class="mb-6 flex justify-center">
-        <img
-            src="{{ asset('images/logo.png') }}"
-            alt="Logo"
-            x-bind:class="{ 'h-20': open, 'h-10': !open }"
-            class="w-auto transition-all duration-300 ease-in-out mx-auto" />
+<aside x-bind:class="{ 'w-72': open, 'w-20': !open }"
+  class="relative glass-sidebar border-r border-white/5 text-slate-400 p-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] h-screen overflow-y-auto flex flex-col z-50 group">
+
+  <!-- Sidebar Header (Logo) -->
+  <div class="mb-10 px-2 flex items-center justify-center h-16">
+    <div x-show="open" x-transition:enter="duration-300 transition-all"
+      x-transition:enter-start="opacity-0 -translate-x-4" class="flex items-center gap-3">
+
+      <span class="text-lg font-black text-white tracking-widest uppercase">Ferretería <span
+          class="text-brand">Baylon</span></span>
     </div>
-    <nav>
-        <ul>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen1 = !submenuOpen1" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-tachometer-alt pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Panel de control</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen1" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li>
-                        <a href="{{ route('panel.usuarios.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-users text-white text-xs"></i></div>Usuarios
-                        </a>
-                    </li>
+    <div x-show="!open" class="p-2 bg-brand/10 rounded-lg border border-brand/20">
+      <x-application-logo class="w-6 h-6 fill-current text-brand" />
+    </div>
+  </div>
 
-                </ul>
-            </li>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen2 = !submenuOpen2" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-cash-register pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Caja</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen2" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li><a href="{{ route('caja.apertura') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-sign-in-alt text-white text-xs"></i></div>Apertura de caja
-                        </a></li>
-                    <li><a href="{{ route('caja.cierre') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-user-slash text-white text-xs"></i></div>Cierre de caja
-                        </a></li>
-                    <li><a href="{{ route('caja.historico') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-history text-white text-xs"></i></div>Histórico de caja
-                        </a></li>
-                </ul>
-            </li>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen3 = !submenuOpen3" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-warehouse pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Almacén</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen3" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li><a href="{{ route('almacen.categoria.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-list text-white text-xs"></i></div>Categorías
-                        </a></li>
-                    <li><a href="{{ route('almacen.articulo.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-box-open text-white text-xs"></i></div>Artículos
-                        </a></li>
+  <!-- Navigation Area -->
+  <nav class="grow space-y-1">
+    @php
+    $menuItems = [
+    [
+    'id' => 1,
+    'label' => 'Panel Control',
+    'icon' => 'fa-tachometer-alt',
+    'role' => 'admin',
+    'sub' => [
+    ['label' => 'Usuarios', 'route' => 'panel.usuarios.index', 'icon' => 'fa-users']
+    ]
+    ],
+    [
+    'id' => 2,
+    'label' => 'Caja',
+    'icon' => 'fa-cash-register',
+    'sub' => [
+    ['label' => 'Apertura', 'route' => 'caja.apertura', 'icon' => 'fa-sign-in-alt'],
+    ['label' => 'Cierre', 'route' => 'caja.cierre', 'icon' => 'fa-user-slash'],
+    ['label' => 'Histórico', 'route' => 'caja.historico', 'icon' => 'fa-history']
+    ]
+    ],
+    [
+    'id' => 3,
+    'label' => 'Almacén',
+    'icon' => 'fa-warehouse',
+    'sub' => [
+    ['label' => 'Categorías', 'route' => 'almacen.categoria.index', 'icon' => 'fa-list'],
+    ['label' => 'Artículos', 'route' => 'almacen.articulo.index', 'icon' => 'fa-box-open'],
+    ['label' => 'Inventario', 'route' => 'almacen.inventario.index', 'icon' => 'fa-boxes']
+    ]
+    ],
+    [
+    'id' => 4,
+    'label' => 'Compras',
+    'icon' => 'fa-shopping-cart',
+    'sub' => [
+    ['label' => 'Entradas', 'route' => 'compras.entrada.index', 'icon' => 'fa-truck-loading'],
+    ['label' => 'Detalle', 'route' => 'compras.detalle.index', 'icon' => 'fa-file-invoice'],
+    ['label' => 'Proveedores', 'route' => 'compras.proveedor.index', 'icon' => 'fa-id-card']
+    ]
+    ],
+    [
+    'id' => 5,
+    'label' => 'Ventas',
+    'icon' => 'fa-chart-line',
+    'sub' => [
+    ['label' => 'POS Venta', 'route' => 'ventas.posventa.index', 'icon' => 'fa-shopping-basket'],
+    ['label' => 'Detalles', 'route' => 'ventas.detalle.index', 'icon' => 'fa-info-circle']
+    ]
+    ],
+    [
+    'id' => 6,
+    'label' => 'Reportes',
+    'icon' => 'fa-file-medical-alt',
+    'role' => 'admin',
+    'sub' => [
+    ['label' => 'Gráficos', 'route' => 'empresa.reportes', 'icon' => 'fa-chart-bar']
+    ]
+    ],
+    [
+    'id' => 7,
+    'label' => 'Configuración',
+    'icon' => 'fa-sliders-h',
+    'role' => 'admin',
+    'sub' => [
+    ['label' => 'Empresa', 'route' => 'configuracion.empresa.index', 'icon' => 'fa-building']
+    ]
+    ],
+    ];
+    @endphp
+
+    @foreach($menuItems as $item)
+    @if(!isset($item['role']) || auth()->user()->hasRole($item['role']))
+    <div class="mb-1">
+      <button x-on:click.prevent="submenuOpen{{ $item['id'] }} = !submenuOpen{{ $item['id'] }}"
+        class="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group hover:bg-white/5 @if(collect($item['sub'])->pluck('route')->contains(Route::currentRouteName())) nav-item-active text-white @endif">
+
+        <div class="flex items-center gap-3 min-w-[24px] justify-center">
+          <i class="fas {{ $item['icon'] }} text-lg group-hover:scale-110 transition-transform duration-300"></i>
+        </div>
+
+        <div x-show="open"
+          class="grow flex items-center justify-between font-bold text-sm tracking-tight overflow-hidden">
+          <span class="whitespace-nowrap">{{ $item['label'] }}</span>
+          <i class="fas fa-chevron-right text-[10px] transition-transform duration-300"
+            x-bind:class="submenuOpen{{ $item['id'] }} ? 'rotate-90' : ''"></i>
+        </div>
+      </button>
+
+      <div x-show="submenuOpen{{ $item['id'] }} && open" x-collapse
+        x-transition:enter="transition-all duration-300 ease-out" x-transition:enter-start="opacity-0 -translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0" class="ml-6 mt-1 overflow-hidden space-y-1">
+        @foreach($item['sub'] as $sub)
+        <a href="{{ route($sub['route']) }}"
+          class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all hover:text-white hover:bg-white/5 @if(Route::currentRouteName() == $sub['route']) text-brand @else text-slate-500 @endif">
+          <i class="fas {{ $sub['icon'] }} text-[12px] opacity-40"></i>
+          <span>{{ $sub['label'] }}</span>
+        </a>
+        @endforeach
+      </div>
+    </div>
+    @endif
+    @endforeach
+  </nav>
 
 
-                    <li><a href="{{ route('almacen.inventario.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-warehouse text-white text-xs"></i></div>Inventario
-                        </a></li>
-                </ul>
-            </li>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen4 = !submenuOpen4" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-shopping-cart pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Compras</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen4" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li><a href="{{ route('compras.entrada.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-sign-in-alt text-white text-xs"></i></div>Entrada de productos
-                        </a></li>
-                    <li><a href="{{ route('compras.detalle.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-list-ul text-white text-xs"></i></div>Detalle entradas
-                        </a></li>
-                    <li><a href="{{ route('compras.proveedor.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-truck text-white text-xs"></i></div>Proveedores
-                        </a></li>
-                </ul>
-            </li>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen5 = !submenuOpen5" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-chart-line pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Ventas</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen5" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li><a href="{{ route('ventas.posventa.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-shopping-bag text-white text-xs"></i></div>PosVenta
-                        </a></li>
-                    <li><a href="{{ route('ventas.detalle.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-info-circle text-white text-xs"></i></div>Detalles Venta
-                        </a></li>
-                </ul>
-            </li>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen6 = !submenuOpen6" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-alt pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Reportes</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen6" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li><a href="{{ route('empresa.reportes') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-chart-bar text-white text-xs"></i></div>Reportes gráficos
-                        </a></li>
-                </ul>
-            </li>
-            <li class="mb-2">
-                <button x-on:click.prevent="submenuOpen7 = !submenuOpen7" x-bind:class="{ 'flex items-center justify-between p-2 rounded hover:bg-gray-700 w-full': open, 'flex items-center justify-center p-2 rounded hover:bg-gray-700 w-full': !open }" class="hover:bg-gray-700 p-2 block rounded focus:outline-none">
-                    <div class="flex items-center">
-                        <i class="fas fa-cog pr-2" x-show="open || !open"></i>
-                        <span x-show="open">Configuración</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-sm" x-show="open"></i>
-                </button>
-                <ul x-show="submenuOpen7" x-cloak x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="ml-4 mt-1 space-y-1">
-                    <li><a href="{{ route('configuracion.empresa.index') }}" class="flex items-center p-2 rounded hover:bg-gray-700 text-sm" x-show="open">
-                            <div class="w-5 h-5 bg-gray-500 rounded-full flex items-center justify-center mr-2"><i class="fas fa-building text-white text-xs"></i></div>Datos de la empresa
-                        </a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
 </aside>
